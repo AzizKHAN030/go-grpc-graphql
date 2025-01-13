@@ -39,9 +39,11 @@ func (s *accountService) PostAccount(ctx context.Context, name string) (*Account
 
 	return acc, nil
 }
+
 func (s *accountService) GetAccount(ctx context.Context, id string) (*Account, error) {
 	return s.repository.GetAccountByID(ctx, id)
 }
+
 func (s *accountService) GetAccounts(ctx context.Context, skip uint64, take uint64) ([]Account, error) {
 	if take > 100 || (skip == 0 && take == 0) {
 		take = 100
