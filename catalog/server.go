@@ -62,7 +62,16 @@ func (s *grpcServer) GetProduct(ctx context.Context, r *pb.GetProductRequest) (*
 }
 
 func (s *grpcServer) GetProducts(ctx context.Context, r *pb.GetProductsRequest) (*pb.GetProductsResponse, error) {
-	p, err := s.service.GetProducts(ctx, r.Skip, r.Take)
+	var res []Product
+	var err error
+
+	if r.Query != "" {
+		res, err = s.service.SearchProducts(ctx, r.Query, r.Skip, r.Take)
+	} else if len(r.Ids) != 0 {
+		res, err = s.service.GetProductsByIDs(ctx, r.Ids)
+	} else {
+		res, err = s.service.GetProducts(ctx, r.Skip, r.Take)
+	}
 
 	if err != nil {
 		log.Println(err)
@@ -70,34 +79,7 @@ func (s *grpcServer) GetProducts(ctx context.Context, r *pb.GetProductsRequest) 
 	}
 
 	return &pb.GetProductsResponse{
-		Products: mapProductsToProductsResponse(p),
-	}, nil
-}
-
-func (s *grpcServer) GetProductsByIDs(ctx context.Context, r *pb.GetProductsByIDsRequest) (*pb.GetProductsByIDsResponse, error) {
-	p, err := s.service.GetProductsByIDs(ctx, r.Ids)
-
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-
-	return &pb.GetProductsByIDsResponse{
-		Products: mapProductsToProductsResponse(p),
-	}, nil
-}
-
-func (s *grpcServer) SearchProducts(ctx context.Context, r *pb.SearchProductsRequest) (*pb.SearchProductsResponse, error) {
-	p, err := s.service.SearchProducts(ctx, r.Query, r.Skip, r.Take)
-
-	if err != nil {
-		log.Println(err)
-
-		return nil, err
-	}
-
-	return &pb.SearchProductsResponse{
-		Products: mapProductsToProductsResponse(p),
+		Products: mapProductsToProductsResponse(res),
 	}, nil
 }
 

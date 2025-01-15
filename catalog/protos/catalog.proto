@@ -29,36 +29,19 @@ message GetProductResponse {
 }
 
 message GetProductsRequest {
-    uint64 skip = 1;
-    uint64 take = 2;
+    string query = 1;
+    string ids = 2;
+    uint64 skip = 3;
+    uint64 take = 4;
 }
 
 message GetProductsResponse {
     repeated Product products = 1;
 }
 
-message GetProductsByIDsRequest {
-    string ids = 1;
-}
-
-message GetProductsByIDsResponse {
-    repeated Product products = 1;
-}
-
-message SearchProductsRequest {
-    string query = 1;
-    uint64 skip = 2;
-    uint64 take = 3;
-}
-
-message SearchProductsResponse {
-    repeated Product products = 1;
-}
 
 service CatalogService {
     rpc PostProduct(PostProductRequest) returns (PostProductResponse){};
     rpc GetProduct(GetProductRequest) returns (GetProductResponse){};
     rpc GetProducts(GetProductsRequest) returns (GetProductsResponse){};
-    rpc GetProductsByIDs(GetProductsByIDsRequest) returns (GetProductsByIDsResponse){};
-    rpc SearchProducts(SearchProductsRequest) returns (SearchProductsResponse){};
 }
