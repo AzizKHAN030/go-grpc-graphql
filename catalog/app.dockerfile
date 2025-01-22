@@ -4,7 +4,7 @@ WORKDIR /go/src/github.com/azizkhan030/go-grpc-graphql
 COPY go.mod go.sum ./
 COPY vendor vendor
 COPY catalog catalog
-RUN GO111MODULE=on go build -mod vendor -o /go/bin/app ./catalog/cmd/catalog
+RUN go build -mod vendor -o /go/bin/app ./catalog/cmd/catalog
 
 FROM alpine:3.21
 WORKDIR /usr/bin

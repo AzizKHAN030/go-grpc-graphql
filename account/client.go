@@ -13,7 +13,7 @@ type Client struct {
 	service    accountpb.AccountServiceClient
 }
 
-func NewCLient(url string) (*Client, error) {
+func NewClient(url string) (*Client, error) {
 	connection, err := grpc.NewClient(url, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {

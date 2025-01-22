@@ -2,7 +2,6 @@ package catalog
 
 import (
 	"context"
-	"strings"
 
 	"github.com/segmentio/ksuid"
 )
@@ -11,7 +10,7 @@ type Service interface {
 	PostProduct(ctx context.Context, name, description string, price float64) (*Product, error)
 	GetProduct(ctx context.Context, id string) (*Product, error)
 	GetProducts(ctx context.Context, skip, take uint64) ([]Product, error)
-	GetProductsByIDs(ctx context.Context, ids string) ([]Product, error)
+	GetProductsByIDs(ctx context.Context, ids []string) ([]Product, error)
 	SearchProducts(ctx context.Context, query string, skip, take uint64) ([]Product, error)
 }
 
@@ -56,9 +55,8 @@ func (s *catalogService) GetProducts(ctx context.Context, skip, take uint64) ([]
 	return s.repository.ListProducts(ctx, skip, take)
 }
 
-func (s *catalogService) GetProductsByIDs(ctx context.Context, ids string) ([]Product, error) {
-	idsSlice := strings.Split(ids, ",")
-	p, err := s.repository.ListProductsWithIDs(ctx, idsSlice)
+func (s *catalogService) GetProductsByIDs(ctx context.Context, ids []string) ([]Product, error) {
+	p, err := s.repository.ListProductsWithIDs(ctx, ids)
 
 	if err != nil {
 		return nil, err

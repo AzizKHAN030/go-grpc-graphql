@@ -67,7 +67,7 @@ func (c *Client) GetProduct(ctx context.Context, id string) (*Product, error) {
 	}, nil
 }
 
-func (c *Client) GetProducts(ctx context.Context, query, ids string, take uint64, skip uint64) ([]*Product, error) {
+func (c *Client) GetProducts(ctx context.Context, query string, ids []string, take uint64, skip uint64) ([]*Product, error) {
 	r, err := c.service.GetProducts(ctx, &pb.GetProductsRequest{
 		Ids:   ids,
 		Take:  take,

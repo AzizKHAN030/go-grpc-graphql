@@ -30,7 +30,7 @@ message GetProductResponse {
 
 message GetProductsRequest {
     string query = 1;
-    string ids = 2;
+    repeated string ids = 2;
     uint64 skip = 3;
     uint64 take = 4;
 }
