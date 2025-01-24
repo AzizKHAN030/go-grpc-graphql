@@ -1,13 +1,29 @@
-FROM golang:1.23.4-alpine3.21 AS build
-RUN apl --no-cache add gcc g++ make ca-certificates
-WORKDIR /go/src/github.com/azizkhan030/go-grpc-graphql
-COPY go.mod go.sum ./
-COPY vendor vendor
-COPY catalog catalog
-RUN go build -mod vendor -o /go/bin/app ./catalog/cmd/catalog
+# Stage 1: Build Stage
+FROM golang:1.23-alpine3.21 AS build
 
-FROM alpine:3.21
+# Install necessary dependencies
+RUN apk --no-cache add gcc g++ make ca-certificates
+
+# Set the working directory
+WORKDIR /go/src/github.com/azizkhan030/go-grpc-graphql
+
+# Copy dependency files and download modules
+COPY go.mod go.sum ./
+RUN go mod download
+COPY catalog ./catalog
+
+# Build the binary for the catalog service
+RUN GO111MODULE=on go build -o /go/bin/catalog ./catalog/cmd/catalog
+
+# Stage 2: Minimal Runtime Stage
+FROM alpine:3.11
 WORKDIR /usr/bin
-COPY --from=build /go/bin .
+
+# Copy the compiled binary from the build stage
+COPY --from=build /go/bin/catalog .
+
+# Expose the application's port
 EXPOSE 8080
-CMD ["app"]
+
+# Set the default command to run the application
+CMD ["catalog"]

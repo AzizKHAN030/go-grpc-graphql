@@ -63,7 +63,7 @@ func (c *Client) PostOrder(ctx context.Context, accountId string, products []Ord
 	}, nil
 }
 
-func (c *Client) GetOrdersFprAccount(ctx context.Context, accountId string) ([]Order, error) {
+func (c *Client) GetOrdersForAccount(ctx context.Context, accountId string) ([]Order, error) {
 	r, err := c.service.GetOrdersForAccount(ctx, &pb.GetOrderForAccountRequest{
 		AccountId: accountId,
 	})
